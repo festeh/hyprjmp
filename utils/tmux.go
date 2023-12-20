@@ -20,8 +20,8 @@ func GetTmuxSessions() ([]string, error) {
 }
 
 type Window struct {
-	Number int
-	Name   string
+	Id  int
+	Name string
 }
 
 func GetWindowsSession(session string) ([]Window, error) {
@@ -42,7 +42,7 @@ func GetWindowsSession(session string) ([]Window, error) {
 
 func parseWindow(windowInfo string) Window {
 	window := Window{}
-	fmt.Sscanf(windowInfo, "%d: %s", &window.Number, &window.Name)
+	fmt.Sscanf(windowInfo, "%d: %s", &window.Id, &window.Name)
 	return window
 }
 
