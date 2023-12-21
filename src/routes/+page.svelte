@@ -1,5 +1,7 @@
 <script>
 	import { AppShell, Autocomplete } from '@skeletonlabs/skeleton';
+	import { afterUpdate } from 'svelte';
+	import { isNumber } from '$lib';
 	export let data;
 
 	let selectionMode = true;
@@ -12,16 +14,21 @@
 			return { value: name, label: name };
 		})
 	);
+	let visibleOptions = [...options];
 
 	function onSelection(event) {
 		input = event.detail.label;
 	}
 
+	afterUpdate(() => {
+		console.log(visibleOptions);
+	});
+
 	function myFilter() {
 		// Create a local copy of options
 		let _options = [...options];
 		// Filter options
-		return _options.filter((option) => {
+		visibleOptions = _options.filter((option) => {
 			// Format the input and option values
 			const inputFormatted = String(input).toLowerCase().trim();
 			const optionFormatted = option.value.toLowerCase().trim();
@@ -35,6 +42,7 @@
 			}
 			return option;
 		});
+		return visibleOptions;
 	}
 
 	let inputCallback = (event) => {
@@ -54,6 +62,29 @@
 		} else if (event.key === 'Escape') {
 			escapeCallback();
 		}
+		if (isNumber(event.key)) {
+			const key = parseInt(event.key);
+			if (key === 0) {
+				return;
+			}
+			if (visibleOptions.length >= key) {
+				const opt = visibleOptions[key - 1];
+				const reqData = {
+					type: 'tmux',
+					Session: opt.value.split('|')[0].split(' ')[1],
+					Window: opt.value.split('|')[1].split(':')[0]
+				};
+				console.log(JSON.stringify(reqData));
+				fetch('http://localhost:8999/jump', {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+						Accept: 'application/json'
+					},
+					body: JSON.stringify(reqData)
+				});
+			}
+		}
 	}
 
 	function onKeypress(_node) {
@@ -72,10 +103,10 @@
 			id="input"
 			bind:value={input}
 			type="search"
-			class="input input-bordered m-2 p-1"
+			class="input-bordered input m-2 p-1"
 			placeholder="Search"
 		/>
-		<span class="w-16 self-center p-2 text-center border font-bold mr-2">
+		<span class="mr-2 w-16 self-center border p-2 text-center font-bold">
 			{#if selectionMode}
 				S
 			{:else}
@@ -83,7 +114,7 @@
 			{/if}
 		</span>
 	</div>
-	<div class="card w-full h-full p-1 m-2 overflow-y-auto" tabindex="-1">
+	<div class="card m-2 h-full w-full overflow-y-auto p-1" tabindex="-1">
 		<Autocomplete bind:input {options} on:selection={onSelection} filter={myFilter} />
 	</div>
 </div>
