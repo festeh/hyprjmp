@@ -17,10 +17,6 @@ type FirefoxTarget struct {
 	Tab string
 }
 
-type I3Target struct {
-	Workspace string
-}
-
 func ParseJumpRequest(req string) (Target, error) {
 	var result map[string]interface{}
 	json.Unmarshal([]byte(req), &result)

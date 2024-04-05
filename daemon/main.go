@@ -2,11 +2,13 @@ package main
 
 import (
 	"encoding/json"
-	"hyprjmp/daemon/jump"
+	"fmt"
+	hyprjmp "hyprjmp/daemon/jump"
 	utils "hyprjmp/daemon/utils"
 	"io"
 	"log"
 	"net/http"
+
 	// "net/http/httputil"
 	"sync"
 	"time"
@@ -77,5 +79,6 @@ func main() {
 		}
 	})
 
+	fmt.Println("Starting server on port 8999")
 	http.ListenAndServe(":8999", nil)
 }
