@@ -1,19 +1,13 @@
-<script>
-	import { AppShell, Autocomplete } from '@skeletonlabs/skeleton';
+<script lang="ts">
+	import { Autocomplete } from '@skeletonlabs/skeleton';
 	import { afterUpdate } from 'svelte';
-	import { isNumber } from '$lib';
+  import { isNumber } from '$lib';
 	export let data;
 
 	let selectionMode = true;
 
 	let sessions = data.props.data.Sessions;
 	let input = '';
-	const options = sessions.flatMap((session) =>
-		session.Windows.map((window) => {
-			const name = `(tmux) ${session.Name}| ${window.Id}:${window.Name}`;
-			return { value: name, label: name };
-		})
-	);
 	let visibleOptions = [...options];
 
 	function onSelection(event) {
