@@ -2,14 +2,14 @@
 	import '../app.css';
 </script>
 
-<div class="flex">
-	<div class="w-1/12">
+<div class="flex flex-row">
+	<div class="">
 		<nav>
 			<a href="/">Home</a>
 			<a href="/fav">Favorites</a>
 		</nav>
 	</div>
-	<div class="flex-grow">
+	<div class="">
 		<slot />
 	</div>
 </div>
